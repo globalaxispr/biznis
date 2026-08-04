@@ -28,7 +28,12 @@ function AppRoutes() {
       <Routes>
         <Route 
           path="/login" 
-          element={session ? <Navigate to="/" replace /> : <Login />} 
+          element={
+            (() => {
+              console.log('[DEBUG-FLOW] App.tsx:Linha 31 - Avaliando Rota /login. Sessão existe?', !!session)
+              return session ? <Navigate to="/" replace /> : <Login />
+            })()
+          } 
         />
         
         <Route path="/" element={

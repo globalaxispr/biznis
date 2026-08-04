@@ -41,14 +41,19 @@ export function Login() {
   }, [])
 
   const onSubmit = async (data: LoginFormValues) => {
+    console.log('[DEBUG-FLOW] Login.tsx:Linha 48 - Login iniciado com email:', data.email)
     try {
-      await AuthRepository.signIn(data.email, data.password)
+      const signInResult = await AuthRepository.signIn(data.email, data.password)
+      console.log('[DEBUG-FLOW] Login.tsx:Linha 51 - Login concluído no AuthRepository. Resultado interno:', !!signInResult)
       
       // Update context strictly from Supabase as per rule 4
+      console.log('[DEBUG-FLOW] Login.tsx:Linha 54 - Chamando refreshSession()')
       await refreshSession()
+      console.log('[DEBUG-FLOW] Login.tsx:Linha 56 - refreshSession() finalizado. Redirecionamento deve ocorrer via AppRoutes')
       
       toast.success("Byenvini nan BizHaiti!")
     } catch (error: any) {
+      console.error('[DEBUG-FLOW] Login.tsx:Linha 60 - ERRO NO LOGIN:', error)
       toast.error(error.message || "Imèl oswa modpas pa bon")
     }
   }

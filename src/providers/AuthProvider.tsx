@@ -21,27 +21,32 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const fetchSessionAndProfile = async () => {
     try {
-      console.log('[AUTH] Fetching session from Supabase...')
+      console.log('[DEBUG-FLOW] AuthProvider.tsx:Linha 23 - Fetching session via supabase.auth.getSession()')
       const { data: { session }, error } = await supabase.auth.getSession()
       
       if (error) {
-        console.error('[AUTH] Error fetching session:', error)
+        console.error('[DEBUG-FLOW] AuthProvider.tsx:Linha 27 - Error fetching session:', error)
         setSession(null)
         setProfile(null)
         return
       }
 
-      console.log('[AUTH] Session restored:', !!session)
+      if (session) {
+        console.log('[DEBUG-FLOW] AuthProvider.tsx:Linha 34 - Sessão ENCONTRADA no Supabase:', session.user.id)
+      } else {
+        console.log('[DEBUG-FLOW] AuthProvider.tsx:Linha 36 - Sessão NÃO ENCONTRADA (null) no Supabase!')
+      }
+      
       setSession(session)
       
       if (session?.user) {
         try {
-          console.log('[AUTH] Fetching profile for user:', session.user.id)
+          console.log('[DEBUG-FLOW] AuthProvider.tsx:Linha 43 - Fetching profile for user:', session.user.id)
           const profileData = await UserRepository.getProfile(session.user.id)
           setProfile(profileData)
-          console.log('[AUTH] Profile found.')
+          console.log('[DEBUG-FLOW] AuthProvider.tsx:Linha 46 - Perfil ENCONTRADO.')
         } catch (profileError) {
-          console.error('[AUTH] Profile not found or error. Continuing authenticated.', profileError)
+          console.error('[DEBUG-FLOW] AuthProvider.tsx:Linha 48 - Perfil não encontrado ou erro. Regra 8 ativa (continuar autenticado).', profileError)
           setProfile(null)
         }
       } else {
