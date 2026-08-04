@@ -3,7 +3,6 @@ import { supabase } from '../lib/supabase'
 import { UserRepository } from '../repositories/UserRepository'
 import { AuthRepository } from '../repositories/AuthRepository'
 import type { Session, User } from '@supabase/supabase-js'
-import { SplashScreen } from '../components/ui/SplashScreen'
 import type { UserProfile } from '../store/authStore' // Re-using types
 
 interface AuthContextType {
@@ -29,22 +28,32 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     let mounted = true
 
     const initializeAuth = async () => {
+      console.log('[AUTH] Starting initializeAuth. Getting session...')
       try {
         const { data: { session }, error } = await supabase.auth.getSession()
         
-        if (error) throw error
+        console.log('[AUTH] getSession finished. Session found:', !!session)
+        if (error) {
+          console.error('[AUTH] getSession error:', error)
+          throw error
+        }
 
         if (mounted) {
           setSession(session)
           if (session?.user) {
+            console.log('[AUTH] Fetching user profile for:', session.user.id)
             const profileData = await UserRepository.getProfile(session.user.id)
             setProfile(profileData)
+            console.log('[AUTH] Profile fetched successfully')
+          } else {
+            console.log('[AUTH] No user in session')
           }
         }
       } catch (error) {
-        console.error('Error during auth initialization:', error)
+        console.error('[AUTH] Error during auth initialization:', error)
       } finally {
         if (mounted) {
+          console.log('[AUTH] Setting isLoading to false')
           setIsLoading(false)
         }
       }
@@ -53,8 +62,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     initializeAuth()
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, currentSession) => {
+      console.log(`[AUTH EVENT] ${event}. Session present: ${!!currentSession}`)
       if (mounted) {
+        if (event === 'INITIAL_SESSION') {
+          console.log('[AUTH] Ignoring INITIAL_SESSION event, initializeAuth handles it.')
+          return
+        }
+
         if (event === 'SIGNED_OUT') {
+          console.log('[AUTH] Handling SIGNED_OUT event. Clearing session.')
           setSession(null)
           setProfile(null)
           return
@@ -63,17 +79,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setSession(currentSession)
         
         if (currentSession?.user && event === 'SIGNED_IN') {
+          console.log('[AUTH] SIGNED_IN event. Fetching profile.')
           try {
             const profileData = await UserRepository.getProfile(currentSession.user.id)
             setProfile(profileData)
           } catch (error) {
-            console.error('Error loading profile on auth state change:', error)
+            console.error('[AUTH] Error loading profile on auth state change:', error)
           }
         }
       }
     })
 
     return () => {
+      console.log('[AUTH] Unmounting AuthProvider')
       mounted = false
       subscription.unsubscribe()
     }
@@ -88,10 +106,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setProfile(null)
       setIsLoading(false)
     }
-  }
-
-  if (isLoading) {
-    return <SplashScreen />
   }
 
   return (
