@@ -92,6 +92,10 @@ export function Login() {
           src="/bizhaiti_login_bg.png" 
           alt="BizHaiti Merchant" 
           onLoad={() => setIsImageLoaded(true)}
+          onError={(e) => {
+            e.currentTarget.style.display = 'none';
+            setIsImageLoaded(true);
+          }}
           className={`absolute inset-0 w-full h-full object-cover object-top md:object-center transition-opacity duration-700 ${isImageLoaded ? 'opacity-100' : 'opacity-0'}`}
         />
         

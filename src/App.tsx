@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
 import { MainLayout } from "./layouts/MainLayout"
 import { AuthGuard } from "./components/guards/AuthGuard"
 import { SplashScreen } from "./components/ui/SplashScreen"
+import { ErrorBoundary } from "./components/ErrorBoundary"
 import { useAuthStore } from "./store/authStore"
 import { supabase } from "./lib/supabase"
 import { UserRepository } from "./repositories/UserRepository"
@@ -60,35 +61,37 @@ function App() {
   }
 
   return (
-    <BrowserRouter>
-      <Suspense fallback={<SplashScreen />}>
-        <Routes>
-          <Route 
-            path="/login" 
-            element={session ? <Navigate to="/" replace /> : <Login />} 
-          />
-          
-          <Route path="/" element={
-            <AuthGuard>
-              <MainLayout />
-            </AuthGuard>
-          }>
-            <Route index element={<Dashboard />} />
-            <Route path="vant" element={<POS />} />
-            <Route path="pwodwi" element={<Products />} />
-            <Route path="envante" element={<Inventory />} />
-            <Route path="kliyan" element={<Customers />} />
-            <Route path="founise" element={<Suppliers />} />
-            <Route path="kes" element={<CashRegisterPage />} />
-            <Route path="anplwaye" element={<Employees />} />
-            <Route path="rapo" element={<Reports />} />
-            <Route path="paramet" element={<SettingsPage />} />
-          </Route>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <Suspense fallback={<SplashScreen />}>
+          <Routes>
+            <Route 
+              path="/login" 
+              element={session ? <Navigate to="/" replace /> : <Login />} 
+            />
+            
+            <Route path="/" element={
+              <AuthGuard>
+                <MainLayout />
+              </AuthGuard>
+            }>
+              <Route index element={<Dashboard />} />
+              <Route path="vant" element={<POS />} />
+              <Route path="pwodwi" element={<Products />} />
+              <Route path="envante" element={<Inventory />} />
+              <Route path="kliyan" element={<Customers />} />
+              <Route path="founise" element={<Suppliers />} />
+              <Route path="kes" element={<CashRegisterPage />} />
+              <Route path="anplwaye" element={<Employees />} />
+              <Route path="rapo" element={<Reports />} />
+              <Route path="paramet" element={<SettingsPage />} />
+            </Route>
 
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </Suspense>
-    </BrowserRouter>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
+      </BrowserRouter>
+    </ErrorBoundary>
   )
 }
 
