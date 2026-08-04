@@ -46,7 +46,7 @@ interface SidebarProps {
 
 export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const location = useLocation()
-  const { profile, logout } = useAuth()
+  const { profile } = useAuth()
 
   const currentRole: UserRole = profile?.role || 'admin'
 
@@ -57,7 +57,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const handleLogout = async () => {
     try {
       await AuthRepository.signOut()
-      logout()
+      // Context state is automatically cleared by AuthProvider's onAuthStateChange
       toast.success("Ou dekonekte avèk siksè")
     } catch (error) {
       toast.error("Yon erè rive pandan w ap dekonekte")

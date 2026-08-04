@@ -10,8 +10,6 @@ import { Input } from "../components/ui/input"
 import { Button } from "../components/ui/button"
 import { useAuth } from "../providers/AuthProvider"
 import { AuthRepository } from "../repositories/AuthRepository"
-import { UserRepository } from "../repositories/UserRepository"
-import type { Session } from "@supabase/supabase-js"
 
 const loginSchema = z.object({
   email: z.string().email("Tanpri antre yon imèl ki valab"),
@@ -22,7 +20,7 @@ const loginSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>
 
 export function Login() {
-  const { setSession, setProfile } = useAuth()
+  const { refreshSession } = useAuth()
   const [showPassword, setShowPassword] = useState(false)
   const emailInputRef = useRef<HTMLInputElement>(null)
 
@@ -44,13 +42,10 @@ export function Login() {
 
   const onSubmit = async (data: LoginFormValues) => {
     try {
-      const response = await AuthRepository.signIn(data.email, data.password)
+      await AuthRepository.signIn(data.email, data.password)
       
-      setSession(response.session as Session)
-      if (response.user) {
-        const profile = await UserRepository.getProfile(response.user.id)
-        setProfile(profile)
-      }
+      // Update context strictly from Supabase as per rule 4
+      await refreshSession()
       
       toast.success("Byenvini nan BizHaiti!")
     } catch (error: any) {
