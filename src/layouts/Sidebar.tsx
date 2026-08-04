@@ -14,7 +14,8 @@ import {
   LogOut,
   X
 } from "lucide-react"
-import { useAuthStore, type UserRole } from "../store/authStore"
+import { useAuth } from "../providers/AuthProvider"
+import { type UserRole } from "../store/authStore"
 import { AuthRepository } from "../repositories/AuthRepository"
 import toast from "react-hot-toast"
 
@@ -45,7 +46,7 @@ interface SidebarProps {
 
 export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const location = useLocation()
-  const { profile, logout } = useAuthStore()
+  const { profile, logout } = useAuth()
 
   const currentRole: UserRole = profile?.role || 'admin'
 

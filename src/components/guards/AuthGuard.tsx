@@ -1,12 +1,12 @@
 import { Navigate, useLocation } from "react-router-dom"
-import { useAuthStore } from "../../store/authStore"
+import { useAuth } from "../../providers/AuthProvider"
 
 export function AuthGuard({ children }: { children: React.ReactNode }) {
-  const { session, isLoading } = useAuthStore()
+  const { session, isLoading } = useAuth()
   const location = useLocation()
 
   if (isLoading) {
-    return null // Return null, SplashScreen handles loading in App.tsx
+    return null // Return null, SplashScreen handles loading in AuthProvider
   }
 
   if (!session) {

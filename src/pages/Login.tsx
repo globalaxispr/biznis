@@ -8,7 +8,7 @@ import { motion, type Variants } from "framer-motion"
 
 import { Input } from "../components/ui/input"
 import { Button } from "../components/ui/button"
-import { useAuthStore } from "../store/authStore"
+import { useAuth } from "../providers/AuthProvider"
 import { AuthRepository } from "../repositories/AuthRepository"
 import { UserRepository } from "../repositories/UserRepository"
 import type { Session } from "@supabase/supabase-js"
@@ -22,7 +22,7 @@ const loginSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>
 
 export function Login() {
-  const { setSession, setProfile } = useAuthStore()
+  const { setSession, setProfile } = useAuth()
   const [showPassword, setShowPassword] = useState(false)
   const emailInputRef = useRef<HTMLInputElement>(null)
 

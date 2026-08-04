@@ -2,14 +2,14 @@ import { useState } from 'react'
 import { Plus, Search, Shield, UserCheck, Key, Edit, Trash2 } from 'lucide-react'
 import toast from 'react-hot-toast'
 
-import { useAuthStore } from '../store/authStore'
+import { useAuth } from '../providers/AuthProvider'
 import { EmployeeModal } from '../components/modals/EmployeeModal'
 import { Button } from '../components/ui/button'
 import { Input } from '../components/ui/input'
 import type { Employee } from '../types/erp'
 
 export function Employees() {
-  const { profile } = useAuthStore()
+  const { profile } = useAuth()
 
   const [employees, setEmployees] = useState<Employee[]>([
     { id: '1', first_name: profile?.first_name || 'Admin', last_name: profile?.last_name || 'Principal', email: 'admin@bizhaiti.com', role: profile?.role || 'admin', status: 'active', department: 'Direction', salary: 45000 },

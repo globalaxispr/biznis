@@ -1,4 +1,5 @@
-import { useAuthStore, type UserRole } from '../../store/authStore'
+import { type UserRole } from '../../store/authStore'
+import { useAuth } from '../../providers/AuthProvider'
 
 interface PermissionGuardProps {
   children: React.ReactNode
@@ -7,7 +8,7 @@ interface PermissionGuardProps {
 }
 
 export function PermissionGuard({ children, allowedRoles, fallback = null }: PermissionGuardProps) {
-  const { profile } = useAuthStore()
+  const { profile } = useAuth()
 
   if (!profile) return <>{fallback}</>
 
