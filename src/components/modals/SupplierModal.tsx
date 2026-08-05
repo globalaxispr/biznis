@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
@@ -28,20 +29,36 @@ interface SupplierModalProps {
 }
 
 export function SupplierModal({ isOpen, onClose, onSave, supplier }: SupplierModalProps) {
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<SupplierFormValues>({
+  const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<SupplierFormValues>({
     resolver: zodResolver(supplierSchema),
     defaultValues: {
-      name: supplier?.name || '',
-      company_name: supplier?.company_name || '',
-      phone: supplier?.phone || '',
-      whatsapp: supplier?.whatsapp || '',
-      email: supplier?.email || '',
-      address: supplier?.address || '',
-      city: supplier?.city || 'Port-au-Prince',
-      country: supplier?.country || 'Haiti',
-      notes: supplier?.notes || '',
+      name: '',
+      company_name: '',
+      phone: '',
+      whatsapp: '',
+      email: '',
+      address: '',
+      city: 'Port-au-Prince',
+      country: 'Haiti',
+      notes: '',
     }
   })
+
+  useEffect(() => {
+    if (isOpen) {
+      reset({
+        name: supplier?.name || '',
+        company_name: supplier?.company_name || '',
+        phone: supplier?.phone || '',
+        whatsapp: supplier?.whatsapp || '',
+        email: supplier?.email || '',
+        address: supplier?.address || '',
+        city: supplier?.city || 'Port-au-Prince',
+        country: supplier?.country || 'Haiti',
+        notes: supplier?.notes || '',
+      })
+    }
+  }, [supplier, isOpen, reset])
 
   if (!isOpen) return null
 

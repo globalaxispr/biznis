@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
@@ -25,17 +26,30 @@ interface CustomerModalProps {
 }
 
 export function CustomerModal({ isOpen, onClose, onSave, customer }: CustomerModalProps) {
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<CustomerFormValues>({
+  const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<CustomerFormValues>({
     resolver: zodResolver(customerSchema),
     defaultValues: {
-      name: customer?.name || '',
-      phone: customer?.phone || '',
-      email: customer?.email || '',
-      address: customer?.address || '',
-      notes: customer?.notes || '',
-      is_vip: customer?.is_vip ?? false,
+      name: '',
+      phone: '',
+      email: '',
+      address: '',
+      notes: '',
+      is_vip: false,
     }
   })
+
+  useEffect(() => {
+    if (isOpen) {
+      reset({
+        name: customer?.name || '',
+        phone: customer?.phone || '',
+        email: customer?.email || '',
+        address: customer?.address || '',
+        notes: customer?.notes || '',
+        is_vip: customer?.is_vip ?? false,
+      })
+    }
+  }, [customer, isOpen, reset])
 
   if (!isOpen) return null
 
