@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react"
+import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
@@ -6,7 +6,6 @@ import { Eye, EyeOff, Loader2, Mail, Lock, ShieldCheck, BarChart3, Zap } from "l
 import toast from "react-hot-toast"
 import { motion, type Variants } from "framer-motion"
 
-import { Input } from "../components/ui/input"
 import { useAuth } from "../providers/AuthProvider"
 import { AuthRepository } from "../repositories/AuthRepository"
 
@@ -50,7 +49,7 @@ function KayNephyLogo({ className = "" }: { className?: string }) {
         fill="#2E7D52"
       />
       {/* Stem */}
-      <line x1="104" y1="45" x2="104" y2="72" stroke="#2E7D52" strokeWidth="5" strokeLinecap="round"/>
+      <line x1="104" y1="45" x2="104" y2="72" stroke="#2E7D52" strokeWidth="5" strokeLinecap="round" />
 
       {/* KAY text */}
       <text x="155" y="68" fontFamily="'Helvetica Neue', Arial, sans-serif" fontWeight="800" fontSize="28" fill="#F07823" letterSpacing="2">KAY</text>
@@ -59,8 +58,8 @@ function KayNephyLogo({ className = "" }: { className?: string }) {
       <text x="155" y="115" fontFamily="'Helvetica Neue', Arial, sans-serif" fontWeight="900" fontSize="52" fill="#2E7D52" letterSpacing="1">NEPHY</text>
 
       {/* Dots on Y */}
-      <circle cx="357" cy="72" r="7" fill="#F07823"/>
-      <circle cx="373" cy="82" r="5" fill="#2E7D52"/>
+      <circle cx="357" cy="72" r="7" fill="#F07823" />
+      <circle cx="373" cy="82" r="5" fill="#2E7D52" />
     </svg>
   )
 }
@@ -108,7 +107,6 @@ const cardVariants: Variants = {
 export function Login() {
   const { refreshSession } = useAuth()
   const [showPassword, setShowPassword] = useState(false)
-  const emailInputRef = useRef<HTMLInputElement>(null)
 
   const {
     register,
@@ -118,10 +116,6 @@ export function Login() {
     resolver: zodResolver(loginSchema),
     defaultValues: { email: "", password: "", rememberMe: true },
   })
-
-  useEffect(() => {
-    emailInputRef.current?.focus()
-  }, [])
 
   // ── Submit handler (unchanged logic) ────────────────────────────────────
   const onSubmit = async (data: LoginFormValues) => {
@@ -233,7 +227,7 @@ export function Login() {
             className="mt-6 text-sm leading-relaxed"
             style={{ color: "#C6C6D0", opacity: 0.75 }}
           >
-            Jere pwodwsi, lavant, kliyan, founisè,
+            Jere pwodwi, lavant, kliyan, founisè,
             <br />
             envantè ak rapò ou yo an yon sèl platfòm.
           </motion.p>
@@ -274,7 +268,7 @@ export function Login() {
             className="mt-auto text-xs"
             style={{ color: "#C6C6D0", opacity: 0.4 }}
           >
-            © 2025 Kay Nephy. Tout dwa rezève.
+            © 2026 Kay Nephy. Tout dwa rezève.
           </motion.p>
         </div>
       </motion.div>
@@ -610,7 +604,7 @@ export function Login() {
             className="mt-6 text-center text-[11px]"
             style={{ color: "#B0B0C0" }}
           >
-            © 2025 Kay Nephy. Tout dwa rezève.
+            © 2026 Kay Nephy. Tout dwa rezève.
           </motion.p>
         </motion.div>
       </div>
